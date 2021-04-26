@@ -22,13 +22,12 @@ gi.require_version("Gtk", "3.0")  # noqa
 from gi.repository import Gtk, Gdk
 from gi.repository import GObject
 
-from .treemodel import TreeModel
+from .treemodel import TreeModel, TreeModel2, TreeModel3
 
 
 # Useful for debugging purpose.
 # Disabling that will disable the TreeModelSort on top of our TreeModel
 ENABLE_SORTING = True
-USE_TREEMODELFILTER = False
 
 
 BRITGHTNESS_CACHE = {}
@@ -174,21 +173,14 @@ class TreeView(Gtk.TreeView):
         self.basetree = tree
         # Build the model around LibLarch tree
         self.basetreemodel = TreeModel(tree, types)
-        # Applying an intermediate treemodelfilter, for debugging purpose
-        if USE_TREEMODELFILTER:
-            treemodelfilter = self.basetreemodel.filter_new()
-        else:
-            treemodelfilter = self.basetreemodel
+        self.treemodel = self.basetreemodel
 
         # Apply TreeModelSort to be able to sort
         if ENABLE_SORTING:
-            self.treemodel = self.basetreemodel
             for col_num, col, sort_func in sorting_func:
                 self.treemodel.set_sort_func(
                     col_num, self._sort_func, sort_func)
                 col.set_sort_column_id(col_num)
-        else:
-            self.treemodel = treemodelfilter
 
         self.set_model(self.treemodel)
 

@@ -571,6 +571,8 @@ class FilteredTree(object):
             return len(self.nodes[node_id]['children'])
 
     def node_nth_child(self, node_id, n):
+        if node_id is None:
+            node_id = self.root_id
         return self.nodes[node_id]['children'][n]
 
     def node_parents(self, node_id):
